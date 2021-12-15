@@ -1,0 +1,20 @@
+name: 'Get latest java for gradle wrapper'
+description: 'Return the latest Java version based on the current Gradle wrapper version'
+
+inputs:
+  gradle-wrapper-path:
+    description: 'The path of the `gradle-wrapper.properties` file'
+    required: false
+    default: './gradle/wrapper/gradle-wrapper.properties'
+
+outputs:
+  java-version:
+    description: 'The latest supported Java version based on the current Gradle wrapper version'
+    value: ${{ steps.get-java-version.outputs.java-version }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: get-java-version
+      run: python ${{ github.action_path }}/check-java-version.py ${{ inputs.gradle-wrapper-path }}
+      shell: bash
