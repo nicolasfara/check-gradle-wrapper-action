@@ -1,0 +1,22 @@
+name: Test and Deploy
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Test action
+        id: test-step
+        uses: ./
+        with:
+          gradle-wrapper-path: "./test/gradle-wrapper.properties"
+
+      - name: Check the Java version
+        run: "[[ ${{ steps.test-step.outputs.java-version }} = 17 ]]"
+        shell: bash
