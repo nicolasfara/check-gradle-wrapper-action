@@ -20,3 +20,16 @@ jobs:
       - name: Check the Java version
         run: "[[ ${{ steps.test-step.outputs.java-version }} = 17 ]]"
         shell: bash
+
+  release:
+    needs: [test]
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm install
+          npx semantic-release
